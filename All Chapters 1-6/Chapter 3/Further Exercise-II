@@ -1,0 +1,97 @@
+ #Develop an interactive app using the tkinter module to guess the word, the app should show some random shuffle words and ask user to #guess the words, you can count the score for each correct answer and display the final score. You are free to extend requirements like #providing the timer, different levels etc.
+
+
+import tkinter as tk
+import random
+from tkinter import messagebox
+
+class WordGuessGame:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Word Guessing Game")
+
+        self.words = ["python", "java", "html", "css", "javascript", "django", "react", "angular", "flask", "sql"]
+        self.level = tk.StringVar()
+        self.level.set("easy")
+        self.score = 0
+        self.time_limit = 30
+        self.current_timer = None
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Level selection
+        level_label = tk.Label(self.root, text="Select Level:")
+        level_label.grid(row=0, column=0, padx=10, pady=10)
+
+        level_dropdown = tk.OptionMenu(self.root, self.level, "easy", "medium", "hard")
+        level_dropdown.grid(row=0, column=1, padx=10, pady=10)
+
+        # Score display
+        score_label = tk.Label(self.root, text="Score:")
+        score_label.grid(row=0, column=2, padx=10, pady=10)
+
+        self.score_display = tk.Label(self.root, text="0")
+        self.score_display.grid(row=0, column=3, padx=10, pady=10)
+
+        # Word display
+        self.word_display = tk.Label(self.root, text="", font=("Helvetica", 18))
+        self.word_display.grid(row=1, column=0, columnspan=4, pady=20)
+
+        # Entry for user input
+        self.user_input = tk.Entry(self.root, font=("Helvetica", 14))
+        self.user_input.grid(row=2, column=0, columnspan=4, pady=10)
+        self.user_input.bind("<Return>", self.check_guess)
+
+        # Start button
+        start_button = tk.Button(self.root, text="Start Game", command=self.start_game)
+        start_button.grid(row=3, column=0, columnspan=4, pady=10)
+
+    def start_game(self):
+        self.score = 0
+        self.score_display.config(text="0")
+        self.start_round()
+
+    def start_round(self):
+        self.user_input.delete(0, tk.END)
+        self.current_word = random.choice(self.words)
+        shuffled_word = ''.join(random.sample(self.current_word, len(self.current_word)))
+        self.word_display.config(text=shuffled_word)
+        self.start_timer()
+
+    def start_timer(self):
+        self.time_remaining = self.time_limit
+        self.update_timer_display()
+        self.current_timer = self.root.after(1000, self.update_timer)
+
+    def update_timer(self):
+        self.time_remaining -= 1
+        self.update_timer_display()
+
+        if self.time_remaining > 0:
+            self.current_timer = self.root.after(1000, self.update_timer)
+        else:
+            self.root.after_cancel(self.current_timer)
+            self.end_round()
+
+    def update_timer_display(self):
+        self.word_display.config(text=f"Time: {self.time_remaining}s | {self.current_word}")
+
+    def check_guess(self, event):
+        user_guess = self.user_input.get()
+
+        if user_guess == self.current_word:
+            self.score += 1
+            self.score_display.config(text=str(self.score))
+            self.start_round()
+        else:
+            messagebox.showinfo("Incorrect", "Try again!")
+
+    def end_round(self):
+        messagebox.showinfo("Time's Up", f"Your score: {self.score}")
+        self.start_game()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    game = WordGuessGame(root)
+    root.mainloop()

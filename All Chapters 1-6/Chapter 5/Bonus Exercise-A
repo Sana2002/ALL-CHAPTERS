@@ -1,0 +1,88 @@
+# In the above Exercise -Playing around in class ask the user to enter the values of the Animal
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+class Animal:
+    def __init__(self, type, name, color, age, weight, noise):
+        self.Type = type
+        self.Name = name
+        self.Colour = color
+        self.Age = age
+        self.Weight = weight
+        self.Noise = noise
+
+    def sayHello(self):
+        print(f"{self.Type} {self.Name} says: Hello!")
+
+    def makeNoise(self):
+        print(f"{self.Type} {self.Name} makes a {self.Noise} noise.")
+
+    def animalDetails(self):
+        print(f"Animal Details:\nType: {self.Type}\nName: {self.Name}\nColor: {self.Colour}\nAge: {self.Age}\nWeight: {self.Weight}\nNoise: {self.Noise}")
+
+class AnimalApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Animal Information")
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        label_info = ttk.Label(self.root, text="Enter Animal Information:")
+        label_info.grid(row=0, column=0, columnspan=2, pady=10)
+
+        label_type = ttk.Label(self.root, text="Type:")
+        label_type.grid(row=1, column=0, pady=5, sticky=tk.W)
+        self.entry_type = ttk.Entry(self.root)
+        self.entry_type.grid(row=1, column=1, pady=5)
+
+        label_name = ttk.Label(self.root, text="Name:")
+        label_name.grid(row=2, column=0, pady=5, sticky=tk.W)
+        self.entry_name = ttk.Entry(self.root)
+        self.entry_name.grid(row=2, column=1, pady=5)
+
+        label_color = ttk.Label(self.root, text="Color:")
+        label_color.grid(row=3, column=0, pady=5, sticky=tk.W)
+        self.entry_color = ttk.Entry(self.root)
+        self.entry_color.grid(row=3, column=1, pady=5)
+
+        label_age = ttk.Label(self.root, text="Age:")
+        label_age.grid(row=4, column=0, pady=5, sticky=tk.W)
+        self.entry_age = ttk.Entry(self.root)
+        self.entry_age.grid(row=4, column=1, pady=5)
+
+        label_weight = ttk.Label(self.root, text="Weight:")
+        label_weight.grid(row=5, column=0, pady=5, sticky=tk.W)
+        self.entry_weight = ttk.Entry(self.root)
+        self.entry_weight.grid(row=5, column=1, pady=5)
+
+        label_noise = ttk.Label(self.root, text="Noise:")
+        label_noise.grid(row=6, column=0, pady=5, sticky=tk.W)
+        self.entry_noise = ttk.Entry(self.root)
+        self.entry_noise.grid(row=6, column=1, pady=5)
+
+        create_button = ttk.Button(self.root, text="Create Animal", command=self.create_animal)
+        create_button.grid(row=7, column=0, columnspan=2, pady=10)
+
+    def create_animal(self):
+        type = self.entry_type.get()
+        name = self.entry_name.get()
+        color = self.entry_color.get()
+        age = int(self.entry_age.get())
+        weight = float(self.entry_weight.get())
+        noise = self.entry_noise.get()
+
+        animal = Animal(type, name, color, age, weight, noise)
+        self.display_animal_info(animal)
+
+    def display_animal_info(self, animal):
+        animal.sayHello()
+        animal.makeNoise()
+        animal.animalDetails()
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = AnimalApp(root)
+    root.mainloop()
